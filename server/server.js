@@ -131,11 +131,11 @@ app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 
-app.post('users/login', (req, res) => {
-  var body = _.body(req.body, ['email', 'password']);
+// POST /users/login {email, password}
+app.post('/users/login', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
 
-  user
-    .findByCredentials(body.email, body.password)
+  User.findByCredentials(body.email, body.password)
     .then(user => {
       return user.generateAuthToken().then(token => {
         res.header('x-auth', token).send(user);
